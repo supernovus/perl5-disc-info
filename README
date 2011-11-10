@@ -9,9 +9,42 @@ Using this on a physical disc only works in OSes where you can have a
 I'm not sure if this is possible with Windows, if someone knows a way, 
 let me know. Using it on an .iso file should work on any OS.
 
+= Object Oriented Usage =
+
+Create an object, that offers methods you can query.
+
+  use Disc::Info;
+  my $disc = Disc::Info->load("/dev/cdrom");
+  say $disc->name." was created in the year ".$disc->date->year;
+
+It offers the following methods:
+
+  os           The system id of the disc.
+  name         The volume label of the disc.
+  setid        The volume set id (if any) of the disc.
+  publisher    The publisher of the disc.
+  preparer     The person or group who prepared this disc.
+  appid        The application which created this disc.
+  copyright    Copyright information (typically a file to read.)
+  date         Creation date (as a DateTime object.)
+  created      Alias of 'date', see above.
+  modified     Modification date (as a DateTime object.)
+  effective    Effective date (as a DateTime object.)
+  expires      Expiry date (either a DateTime object, or 0 if no expiry.)
+  filesystem   An identifier for the ISO filesystem type.
+  offset       The offset for a given date field ('created' by default.)
+               In a +/-HHMM format, i.e.: -0800 or +0530
+
+
+= Procedural Usage =
+
 It returns a hash reference, populated with fields representing the disc info.
 
-= Normal Fields =
+  use Disc::Info 'get_disc_info';
+  my $disc = get_disc_info("/dev/cdrom");
+  say $disc->{name}." was created in the year ".$disc->{cdate}->year;
+
+Offers the following fields:
 
   fs           An identifier for the ISO filesystem type.
   os           The system id of the disc.
@@ -25,24 +58,10 @@ It returns a hash reference, populated with fields representing the disc info.
   mdate        Modification date (as a DateTime object.)
   edate        Effective date (as a DateTime object.)
   xdate        Expiry date (either a DateTime object, or 0 if no expiry.)
-
-= Offset Fields =
-
-These fields are typically not needed directly, and are used internally to
-set the timezone on the date fields they represent. However, they are
-available to query, and will contain the offset in a HHMM string format,
-such as "-0800" or "+0530".
-
-  coff         Creation date timezone offset.
-  moff         Modification date timezone offset.
-  eoff         Effective date timezone offset.
-  xoff         Expiry date timezone offset.
-
-= Usage =
-
-  use Disc::Info;
-  my $cd = get_disc_info("/dev/cdrom");
-  say $cd->{name}." was created in the year ".$cd->{cdate}->year;
+  coff         Creation date timezone offset (in HHMM format.)
+  moff         Modification date timezone offset (in HHMM format).
+  eoff         Effective date timezone offset (in HHMM format.)
+  xoff         Expiry date timezone offset (in HHMM format.)
 
 = Runtime requirements =
 

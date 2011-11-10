@@ -6,10 +6,9 @@ use Carp;
 
 use DateTime;
 
-our $VERSION = 1.0;
+our $VERSION = 2.0;
 
 use Exporter 'import';
-our @EXPORT    = qw(get_disc_info);
 our @EXPORT_OK = qw(get_disc_info);
 
 ## Date fields, an array reference, of array references.
@@ -37,7 +36,10 @@ our $DATA_FIELDS = [
 sub get_disc_info {
   my ($device, $raw) = @_;
   if (!defined $device) {
-    croak "Device not specified.";
+    croak "Device/image not specified.";
+  }
+  elsif (!-e $device) {
+    croak "Device/image not found.";
   }
   my %info;
   open(my $dev, "<:raw", $device);
@@ -89,6 +91,101 @@ sub get_disc_info {
     $info{$name} = $value;
   }
   return \%info;
+}
+
+## Optional OO form.
+
+## We use load() instead of new() as it makes more sense.
+sub load {
+  my ($class, $disc) = @_;
+  my $self = get_disc_info($disc);
+  return bless $self, $class;
+}
+
+## Wrappers for the fields.
+
+sub filesystem {
+  my $self = shift;
+  return $self->{fs};
+}
+
+sub os {
+  my $self = shift;
+  return $self->{os};
+}
+
+sub name {
+  my $self = shift;
+  return $self->{name};
+}
+
+sub setid {
+  my $self = shift;
+  return $self->{setid};
+}
+
+sub publisher {
+  my $self = shift;
+  return $self->{publisher};
+}
+
+sub preparer {
+  my $self = shift;
+  return $self->{preparer};
+}
+
+sub appid {
+  my $self = shift;
+  return $self->{appid};
+}
+
+sub copyright {
+  my $self = shift;
+  return $self->{copyright};
+}
+
+## The obscure date fields are given nicer names here.
+
+## We give two different names for cdate: date and created.
+sub date {
+  my $self = shift;
+  return $self->{cdate};
+}
+sub created {
+  my $self = shift;
+  return $self->{cdate};
+}
+
+sub modified {
+  my $self = shift;
+  return $self->{mdate};
+}
+
+sub effective {
+  my $self = shift;
+  return $self->{edate};
+}
+
+sub expires {
+  my $self = shift;
+  return $self->{xdate};
+}
+
+## Offset, not typically used, but available anyway.
+sub offset {
+  my ($self, $want) = @_;
+  if (defined $want) {
+    if ($want eq 'modified') {
+      return $self->{moff};
+    }
+    elsif ($want eq 'effective') {
+      return $self->{eoff};
+    }
+    elsif ($want eq 'expires') {
+      return $self->{xoff};
+    }
+  }
+  return $self->{coff};
 }
 
 ## End of package.

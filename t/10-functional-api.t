@@ -7,7 +7,7 @@ use Test::Exception;
 
 BEGIN { 
   push @INC, "./lib"; 
-  use_ok('Disc::Info');
+  use_ok('Disc::Info', 'get_disc_info');
 }
 
 ## Update if we regenerate the ISO image.
