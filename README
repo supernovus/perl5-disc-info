@@ -1,0 +1,64 @@
+Disc::Info
+------------
+
+Gets optical disc information from an ISO-format disc (CD/DVD) or ".iso"
+image file.
+
+Using this on a physical disc only works in OSes where you can have a 
+"file" representing the optical drive.  So Linux, Unix, Mac OS X, etc. 
+I'm not sure if this is possible with Windows, if someone knows a way, 
+let me know. Using it on an .iso file should work on any OS.
+
+It returns a hash reference, populated with fields representing the disc info.
+
+= Normal Fields =
+
+  fs           An identifier for the ISO filesystem type.
+  os           The system id of the disc.
+  name         The volume label of the disc.
+  setid        The volume set id (if any) of the disc.
+  publisher    The publisher of the disc.
+  preparer     The person or group who prepared this disc.
+  appid        The application which created this disc.
+  copyright    Copyright information (typically a file to read.)
+  cdate        Creation date (as a DateTime object.)
+  mdate        Modification date (as a DateTime object.)
+  edate        Effective date (as a DateTime object.)
+  xdate        Expiry date (either a DateTime object, or 0 if no expiry.)
+
+= Offset Fields =
+
+These fields are typically not needed directly, and are used internally to
+set the timezone on the date fields they represent. However, they are
+available to query, and will contain the offset in a HHMM string format,
+such as "-0800" or "+0530".
+
+  coff         Creation date timezone offset.
+  moff         Modification date timezone offset.
+  eoff         Effective date timezone offset.
+  xoff         Expiry date timezone offset.
+
+= Usage =
+
+  use Disc::Info;
+  my $cd = get_disc_info("/dev/cdrom");
+  say $cd->{name}." was created in the year ".$cd->{cdate}->year;
+
+= Runtime requirements =
+
+ * Perl 5    (tested with 5.12.4)
+ * DateTime  (tested with 0.70)
+
+= Testing requirements =
+
+ * Test::More
+ * Test::Exception
+
+= Author =
+
+Timothy Totten
+https://github.com/supernovus/
+
+= License =
+
+Artistic License 2.0
