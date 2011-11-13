@@ -20,7 +20,7 @@ my $TZ_LOCAL = "-0800";
 my $TZ_OFFSET = -28800;
 
 my $info;
-lives_ok { $info = Disc::Info->load('./t/test.iso'); } 'Disc::Info->load() lives.';
+lives_ok { $info = Disc::Info->get('./t/test.iso'); } 'Disc::Info->get() lives.';
 
 sub is_field {
   my ($field, $what, $msg) = @_;

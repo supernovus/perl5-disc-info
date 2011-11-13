@@ -14,7 +14,7 @@ let me know. Using it on an .iso file should work on any OS.
 Create an object, that offers methods you can query.
 
   use Disc::Info;
-  my $disc = Disc::Info->load("/dev/cdrom");
+  my $disc = Disc::Info->get("/dev/cdrom");
   say $disc->name." was created in the year ".$disc->date->year;
 
 It offers the following methods:
@@ -81,3 +81,4 @@ https://github.com/supernovus/
 = License =
 
 Artistic License 2.0
+
